@@ -249,7 +249,7 @@ function LyricsResults({ songData, onNewSearch }) {
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  ✨ Animated
+                  Animated
                 </button>
               </div>
 
@@ -298,7 +298,7 @@ function LyricsResults({ songData, onNewSearch }) {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center">
-                <span className="text-lg font-semibold text-gray-900 mr-2">✨ Interactive Translation</span>
+                <span className="text-lg font-semibold text-gray-900 mr-2">Interactive Translation</span>
                 <span className="text-sm text-gray-500">(Click any line to toggle language)</span>
               </div>
               <div className="text-sm text-blue-600">
