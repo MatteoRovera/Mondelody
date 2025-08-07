@@ -122,27 +122,13 @@ function SongInputForm({ onSearchComplete }) {
 
 // Lyrics Results Component
 function LyricsResults({ songData, onNewSearch }) {
-  // For now, still using mock data until we implement scraping
-  // But now we're getting real title/artist from the backend
-  const mockResults = {
+  const results = {
     title: songData.title,
     artist: songData.artist,
-    originalLyrics: `[Original French lyrics will appear here once scraping is implemented]
-
-Title: ${songData.title}
-Artist: ${songData.artist}
-
-Backend connection: ✅ Working
-Search endpoint: ✅ Responding
-Next steps: Add web scraping and AI translation`,
-    translatedLyrics: `[English translation will appear here once AI integration is complete]
-
-Title: ${songData.title}  
-Artist: ${songData.artist}
-
-Status: Connected to backend!
-Ready for: Lyrics scraping and OpenAI translation`,
-    source: "Backend API Response"
+    originalLyrics: songData.originalLyrics || 'No lyrics found',
+    translatedLyrics: songData.translatedLyrics || 'Translation not available',
+    source: songData.source || 'Unknown source',
+    status: songData.status || 'Unknown status'
   };
 
   return (
@@ -153,9 +139,12 @@ Ready for: Lyrics scraping and OpenAI translation`,
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
-                "{mockResults.title}" by {mockResults.artist}
+                "{results.title}" by {results.artist}
               </h1>
-              <p className="text-sm text-gray-500 mt-1">{mockResults.source}</p>
+              <p className="text-sm text-gray-500 mt-1">{results.source}</p>
+              {results.status && (
+                <p className="text-xs text-blue-600 mt-1">Status: {results.status}</p>
+              )}
             </div>
             <button
               onClick={onNewSearch}
@@ -176,7 +165,7 @@ Ready for: Lyrics scraping and OpenAI translation`,
             </div>
             <div className="prose prose-sm max-w-none">
               <pre className="whitespace-pre-wrap text-gray-700 leading-relaxed font-sans">
-{mockResults.originalLyrics}
+{results.originalLyrics}
               </pre>
             </div>
           </div>
@@ -189,7 +178,7 @@ Ready for: Lyrics scraping and OpenAI translation`,
             </div>
             <div className="prose prose-sm max-w-none">
               <pre className="whitespace-pre-wrap text-gray-700 leading-relaxed font-sans">
-{mockResults.translatedLyrics}
+{results.translatedLyrics}
               </pre>
             </div>
           </div>
@@ -205,7 +194,7 @@ Ready for: Lyrics scraping and OpenAI translation`,
             </div>
             <div className="ml-3">
               <p className="text-sm text-blue-700">
-                <strong>How it works:</strong> We searched for "paroles {mockResults.title} {mockResults.artist}" to find the French lyrics, 
+                <strong>How it works:</strong> We searched for "paroles {results.title} {results.artist}" to find the French lyrics, 
                 then used AI translation to preserve the song's meaning and tone in English.
               </p>
             </div>
