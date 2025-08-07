@@ -10,22 +10,38 @@ function SongInputForm({ onSearchComplete }) {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate the search and translation process
-    console.log('Searching for lyrics:', { title, artist, language: 'French' });
-    
-    // Mock the backend workflow:
-    // 1. Search for lyrics using "paroles" + title + artist
-    // 2. Scrape and parse lyrics from found page
-    // 3. Send to AI for translation
-    // 4. Return both original and translated lyrics
-    
-    // Simulate processing time
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
-    setIsLoading(false);
-    
-    // Pass the search data to parent
-    onSearchComplete({ title, artist });
+    try {
+      console.log('Calling backend API...');
+      
+      // Make API call to backend
+      const response = await fetch('http://localhost:3001/api/search-lyrics', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: title.trim(),
+          artist: artist.trim()
+        })
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        console.log('Backend response:', data);
+        // Pass the search data to parent
+        onSearchComplete({ title, artist, ...data });
+      } else {
+        console.error('Backend error:', data.error);
+        alert(`Error: ${data.error}`);
+      }
+      
+    } catch (error) {
+      console.error('Network error:', error);
+      alert('Failed to connect to backend. Make sure the server is running on port 3001.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -106,29 +122,27 @@ function SongInputForm({ onSearchComplete }) {
 
 // Lyrics Results Component
 function LyricsResults({ songData, onNewSearch }) {
-  // Mock data for now - this will come from your backend
+  // For now, still using mock data until we implement scraping
+  // But now we're getting real title/artist from the backend
   const mockResults = {
     title: songData.title,
     artist: songData.artist,
-    originalLyrics: `Verse 1 in French would appear here
-Line by line format
-Preserving the structure
-Of the original song
+    originalLyrics: `[Original French lyrics will appear here once scraping is implemented]
 
-Chorus in French
-With proper spacing
-And line breaks
-Maintaining readability`,
-    translatedLyrics: `English translation would appear here
-Line by line format
-Preserving the structure
-Of the original song
+Title: ${songData.title}
+Artist: ${songData.artist}
 
-English chorus translation
-With proper spacing
-And line breaks
-Maintaining readability`,
-    source: "Found on paroles.net"
+Backend connection: ✅ Working
+Search endpoint: ✅ Responding
+Next steps: Add web scraping and AI translation`,
+    translatedLyrics: `[English translation will appear here once AI integration is complete]
+
+Title: ${songData.title}  
+Artist: ${songData.artist}
+
+Status: Connected to backend!
+Ready for: Lyrics scraping and OpenAI translation`,
+    source: "Backend API Response"
   };
 
   return (
