@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-// Song Input Form Component
+// Song Input Form Component (unchanged)
 function SongInputForm({ onSearchComplete }) {
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
@@ -120,8 +120,70 @@ function SongInputForm({ onSearchComplete }) {
   );
 }
 
-// Lyrics Results Component
+// Animated Line Component
+function AnimatedLyricLine({ originalText, translatedText, lineIndex, animationMode, initialDelay }) {
+  const [currentText, setCurrentText] = useState(originalText);
+  const [showingOriginal, setShowingOriginal] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [hasStartedAnimation, setHasStartedAnimation] = useState(false);
+
+  // Initial animation from French to English
+  useEffect(() => {
+    if (animationMode && !hasStartedAnimation) {
+      const timer = setTimeout(() => {
+        setHasStartedAnimation(true);
+        setIsAnimating(true);
+        
+        setTimeout(() => {
+          setCurrentText(translatedText);
+          setShowingOriginal(false);
+          setIsAnimating(false);
+        }, 300);
+      }, initialDelay);
+
+      return () => clearTimeout(timer);
+    }
+  }, [animationMode, translatedText, initialDelay, hasStartedAnimation]);
+
+  // Handle click to toggle between languages
+  const handleClick = () => {
+    if (animationMode && !isAnimating) {
+      setIsAnimating(true);
+      
+      setTimeout(() => {
+        if (showingOriginal) {
+          setCurrentText(translatedText);
+          setShowingOriginal(false);
+        } else {
+          setCurrentText(originalText);
+          setShowingOriginal(true);
+        }
+        setIsAnimating(false);
+      }, 300);
+    }
+  };
+
+  return (
+    <div 
+      className={`transition-all duration-300 ${
+        animationMode 
+          ? `cursor-pointer hover:bg-blue-50 hover:shadow-sm rounded px-2 py-1 ${
+              isAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+            }` 
+          : ''
+      }`}
+      onClick={handleClick}
+    >
+      {currentText}
+    </div>
+  );
+}
+
+// Enhanced Lyrics Results Component
 function LyricsResults({ songData, onNewSearch }) {
+  const [viewMode, setViewMode] = useState('side-by-side'); // 'side-by-side' or 'animated'
+  const [animationStarted, setAnimationStarted] = useState(false);
+
   const results = {
     title: songData.title,
     artist: songData.artist,
@@ -131,12 +193,31 @@ function LyricsResults({ songData, onNewSearch }) {
     status: songData.status || 'Unknown status'
   };
 
+  // Parse lyrics into lines
+  const originalLines = results.originalLyrics.split('\n');
+  const translatedLines = results.translatedLyrics.split('\n');
+
+  // Start animation when switching to animated mode
+  useEffect(() => {
+    if (viewMode === 'animated') {
+      setAnimationStarted(true);
+    }
+  }, [viewMode]);
+
+  const handleViewModeChange = (mode) => {
+    setViewMode(mode);
+    if (mode === 'animated') {
+      setAnimationStarted(false);
+      setTimeout(() => setAnimationStarted(true), 100);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between items-start flex-wrap gap-4">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
                 "{results.title}" by {results.artist}
@@ -146,43 +227,108 @@ function LyricsResults({ songData, onNewSearch }) {
                 <p className="text-xs text-blue-600 mt-1">Status: {results.status}</p>
               )}
             </div>
-            <button
-              onClick={onNewSearch}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            >
-              New Search
-            </button>
+            
+            <div className="flex items-center gap-4">
+              {/* View Mode Toggle */}
+              <div className="flex bg-gray-100 rounded-lg p-1">
+                <button
+                  onClick={() => handleViewModeChange('side-by-side')}
+                  className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                    viewMode === 'side-by-side' 
+                      ? 'bg-white text-blue-600 shadow-sm' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Side by Side
+                </button>
+                <button
+                  onClick={() => handleViewModeChange('animated')}
+                  className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                    viewMode === 'animated' 
+                      ? 'bg-white text-blue-600 shadow-sm' 
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  ✨ Animated
+                </button>
+              </div>
+
+              <button
+                onClick={onNewSearch}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                New Search
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Lyrics Display */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Original French Lyrics */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center mb-4">
-              <span className="text-lg font-semibold text-gray-900 mr-2">🇫🇷 Original</span>
-              <span className="text-sm text-gray-500">(French)</span>
-            </div>
-            <div className="prose prose-sm max-w-none">
-              <pre className="whitespace-pre-wrap text-gray-700 leading-relaxed font-sans">
+        {viewMode === 'side-by-side' ? (
+          // Original side-by-side view
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Original French Lyrics */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="flex items-center mb-4">
+                <span className="text-lg font-semibold text-gray-900 mr-2">🇫🇷 Original</span>
+                <span className="text-sm text-gray-500">(French)</span>
+              </div>
+              <div className="prose prose-sm max-w-none">
+                <pre className="whitespace-pre-wrap text-gray-700 leading-relaxed font-sans">
 {results.originalLyrics}
-              </pre>
+                </pre>
+              </div>
             </div>
-          </div>
 
-          {/* Translated English Lyrics */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex items-center mb-4">
-              <span className="text-lg font-semibual text-gray-900 mr-2">🇺🇸 Translation</span>
-              <span className="text-sm text-gray-500">(English)</span>
-            </div>
-            <div className="prose prose-sm max-w-none">
-              <pre className="whitespace-pre-wrap text-gray-700 leading-relaxed font-sans">
+            {/* Translated English Lyrics */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="flex items-center mb-4">
+                <span className="text-lg font-semibold text-gray-900 mr-2">🇺🇸 Translation</span>
+                <span className="text-sm text-gray-500">(English)</span>
+              </div>
+              <div className="prose prose-sm max-w-none">
+                <pre className="whitespace-pre-wrap text-gray-700 leading-relaxed font-sans">
 {results.translatedLyrics}
-              </pre>
+                </pre>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          // New animated overlay view
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center">
+                <span className="text-lg font-semibold text-gray-900 mr-2">✨ Interactive Translation</span>
+                <span className="text-sm text-gray-500">(Click any line to toggle language)</span>
+              </div>
+              <div className="text-sm text-blue-600">
+                🇫🇷 → 🇺🇸 Auto-translating...
+              </div>
+            </div>
+            
+            <div className="prose prose-sm max-w-none">
+              <div className="whitespace-pre-wrap text-gray-700 leading-relaxed font-sans space-y-1">
+                {originalLines.map((originalLine, index) => (
+                  <AnimatedLyricLine
+                    key={index}
+                    originalText={originalLine}
+                    translatedText={translatedLines[index] || originalLine}
+                    lineIndex={index}
+                    animationMode={animationStarted}
+                    initialDelay={index * 200 + 1000} // Stagger animation by 200ms per line, start after 1s
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-700">
+                💡 <strong>Tip:</strong> Watch as the French lyrics automatically fade into English, 
+                then click any line to switch back and forth between languages!
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Footer Info */}
         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -205,7 +351,7 @@ function LyricsResults({ songData, onNewSearch }) {
   );
 }
 
-// Main App Component
+// Main App Component (unchanged)
 export default function App() {
   const [currentView, setCurrentView] = useState('search'); // 'search' or 'results'
   const [searchData, setSearchData] = useState(null);
