@@ -320,13 +320,6 @@ function LyricsResults({ songData, onNewSearch }) {
                 ))}
               </div>
             </div>
-
-            <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-700">
-                💡 <strong>Tip:</strong> Watch as the French lyrics automatically fade into English, 
-                then click any line to switch back and forth between languages!
-              </p>
-            </div>
           </div>
         )}
 
