@@ -333,7 +333,7 @@ function LyricsResults({ songData, onNewSearch }) {
             </div>
             <div className="ml-3">
               <p className="text-sm text-blue-700">
-                <strong>How it works:</strong> We searched for "paroles {results.title} {results.artist}" to find the French lyrics, 
+                <strong>How it works:</strong> Searched "paroles {results.title} {results.artist}" to find the French lyrics, 
                 then used AI translation to preserve the song's meaning and tone in English.
               </p>
             </div>
