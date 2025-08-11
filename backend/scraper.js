@@ -153,7 +153,6 @@ Comme un nouveau refrain
     };
   }
 
-  // Improved page scraping with multiple selectors
   async scrapePage(url, siteName) {
     console.log(`📄 Scraping ${siteName}: ${url}`);
     
