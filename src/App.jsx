@@ -239,7 +239,7 @@ function LyricsResults({ songData, onNewSearch }) {
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
-                  Side by Side
+                  Side-by-Side
                 </button>
                 <button
                   onClick={() => handleViewModeChange('animated')}
