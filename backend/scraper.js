@@ -38,7 +38,7 @@ class LyricsScraper {
         }
         
       } catch (error) {
-        console.log(`Strategy ${strategy} failed:`, error.message);
+        console.log(`❌ Strategy ${strategy} failed:`, error.message);
         continue; // Try next strategy
       }
     }
@@ -51,7 +51,7 @@ class LyricsScraper {
 
   // Try multiple direct site search approaches
   async tryDirectSiteSearch(title, artist) {
-    console.log('📡 Trying flexible site searches...');
+    console.log('Trying flexible site searches...');
     
     // Multiple URL patterns to try
     const urlPatterns = [
@@ -67,7 +67,7 @@ class LyricsScraper {
 
     for (const url of urlPatterns) {
       try {
-        console.log(`🔗 Trying URL: ${url}`);
+        console.log(`Trying URL: ${url}`);
         const lyrics = await this.scrapePage(url, this.getSiteFromUrl(url));
         
         if (lyrics && lyrics.length > 50) {
@@ -111,7 +111,7 @@ class LyricsScraper {
 
   // Generate test lyrics for development/demo
   async generateTestLyrics(title, artist) {
-    console.log('🎭 Generating test lyrics for demo...');
+    console.log('Generating test lyrics for demo...');
     
     // Create realistic-looking French lyrics structure for demo
     const testLyrics = `[Couplet 1]
