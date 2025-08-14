@@ -38,7 +38,7 @@ class LyricsScraper {
         }
         
       } catch (error) {
-        console.log(`❌ Strategy ${strategy} failed:`, error.message);
+        console.log(`Strategy ${strategy} failed:`, error.message);
         continue; // Try next strategy
       }
     }
