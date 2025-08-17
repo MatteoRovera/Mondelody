@@ -223,6 +223,7 @@ function LyricsResults({ songData, onNewSearch }) {
                 "{results.title}" by {results.artist}
               </h1>
               <p className="text-sm text-gray-500 mt-1">{results.source}</p>
+              <p className="text-xs text-green-600 mt-1">Detected Language: French 🇫🇷</p>
               {results.status && (
                 <p className="text-xs text-blue-600 mt-1">Status: {results.status}</p>
               )}
@@ -366,6 +367,7 @@ export default function App() {
       )}
       {currentView === 'results' && searchData && (
         <LyricsResults songData={searchData} onNewSearch={handleNewSearch} />
+        
       )}
     </>
   );
