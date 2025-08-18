@@ -54,7 +54,7 @@ function SongInputForm({ onSearchComplete }) {
         <p className="text-sm text-gray-600 mb-6 text-center">
           {isLoading ? (
             <span className="text-blue-600 font-medium">
-              🔍 Searching for French lyrics and translating...
+              🔍 Finding lyrics and translating...
             </span>
           ) : (
             "Translate French song lyrics to English"
