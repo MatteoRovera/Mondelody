@@ -38,7 +38,7 @@ function SongInputForm({ onSearchComplete }) {
       
     } catch (error) {
       console.error('Network error:', error);
-      alert('Failed to connect to backend. Make sure the server is running on port 3001.');
+      alert('Failed to connect to backend.');
     } finally {
       setIsLoading(false);
     }
