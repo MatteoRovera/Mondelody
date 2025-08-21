@@ -38,7 +38,7 @@ function SongInputForm({ onSearchComplete }) {
       
     } catch (error) {
       console.error('Network error:', error);
-      alert('Failed to connect to backend.');
+      alert('Failed to connect to backend...');
     } finally {
       setIsLoading(false);
     }
