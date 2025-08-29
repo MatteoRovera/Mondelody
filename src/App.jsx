@@ -316,7 +316,7 @@ function LyricsResults({ songData, onNewSearch }) {
                     translatedText={translatedLines[index] || originalLine}
                     lineIndex={index}
                     animationMode={animationStarted}
-                    initialDelay={index * 200 + 1000} // Stagger animation by 200ms per line, start after 1s
+                    initialDelay={index * 200 + 1000} // Stagger animation by 200ms per line, start after 1second
                   />
                 ))}
               </div>
