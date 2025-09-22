@@ -118,7 +118,7 @@ class LyricsScraper {
 Dans les rues de Paris
 Je pense à notre histoire
 ${title}, tu es partie
-Mais je garde l'espoir
+Mais je gard l'espoir
 
 [Refrain]
 ${title}, ${title}
