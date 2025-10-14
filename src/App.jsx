@@ -11,7 +11,7 @@ function SongInputForm({ onSearchComplete }) {
     setIsLoading(true);
     
     try {
-      console.log('Calling backend API');
+      console.log('Calling backend');
       
       // Make API call to backend
       const response = await fetch('http://localhost:3001/api/search-lyrics', {
